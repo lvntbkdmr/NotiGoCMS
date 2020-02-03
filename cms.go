@@ -13,11 +13,41 @@ import (
 	"github.com/kjk/notionapi"
 	"github.com/kjk/notionapi/caching_downloader"
 	"github.com/kjk/u"
+
+	"github.com/BurntSushi/toml"
 )
 
 var (
 	cacheDir = "cache"
 )
+
+type tomlConfig struct {
+	Notion notion
+	Hugo   hugo
+	CMS    cms
+}
+
+type notion struct {
+	StartPage string
+	Token  string
+}
+
+type hugo struct {
+	Repo  string
+	Ports   []int
+	ConnMax int `toml:"connection_max"`
+	Enabled bool
+}
+
+type server struct {
+	IP string
+	DC string
+}
+
+type clients struct {
+	Data  [][]interface{}
+	Hosts []string
+}
 
 func newNotionClient() *notionapi.Client {
 	token := os.Getenv("NOTION_TOKEN")
