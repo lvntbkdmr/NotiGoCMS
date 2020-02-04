@@ -21,18 +21,9 @@ import (
 type ConfigType struct {
 	Notion struct {
 		StartPage string `toml:"startPage"`
-		Token     string `toml:"token"`
 	} `toml:"notion"`
 	Hugo struct {
 		Repo string `toml:"repo"`
-		User struct {
-			Email string `toml:"email"`
-			Name  string `toml:"name"`
-			Git   struct {
-				Uname string `toml:"uname"`
-				Token string `toml:"token"`
-			} `toml:"git"`
-		} `toml:"user"`
 	} `toml:"hugo"`
 	Cms struct {
 		CacheDir string `toml:"cacheDir"`
@@ -45,11 +36,10 @@ var (
 	config ConfigType
 )
 
-func newNotionClient() *notionapi.Client 
-{
-	token := config.Notion.Token
+func newNotionClient() *notionapi.Client {
+	token := os.Getenv("NOTION_TOKEN")
 	if token == "" {
-		fmt.Printf("must set notion token config\n")
+		fmt.Println("must set NOTION_TOKEN env variable\n")
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -61,23 +51,19 @@ func newNotionClient() *notionapi.Client
 	return client
 }
 
-func recreateDir(dir string) 
-{
+func recreateDir(dir string) {
 	err := os.RemoveAll(dir)
 	u.Must(err)
 	err = os.MkdirAll(dir, 0755)
 	u.Must(err)
 }
 
-func main() 
-{
+func main() {
 	if _, err := toml.DecodeFile("config.toml", &config); err != nil {
 		fmt.Println(err)
 		return
 	}
-
-	//recreateDir("static")
-
+	
 	client := newNotionClient()
 	cache, err := caching_downloader.NewDirectoryCache(config.Cms.CacheDir)
 	u.Must(err)
