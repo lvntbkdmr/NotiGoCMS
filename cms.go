@@ -17,42 +17,39 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+//Auto-generated from https://xuri.me/toml-to-go/
+type ConfigType struct {
+	Notion struct {
+		StartPage string `toml:"startPage"`
+		Token     string `toml:"token"`
+	} `toml:"notion"`
+	Hugo struct {
+		Repo string `toml:"repo"`
+		User struct {
+			Email string `toml:"email"`
+			Name  string `toml:"name"`
+			Git   struct {
+				Uname string `toml:"uname"`
+				Token string `toml:"token"`
+			} `toml:"git"`
+		} `toml:"user"`
+	} `toml:"hugo"`
+	Cms struct {
+		CacheDir string `toml:"cacheDir"`
+		PostsDir string `toml:"postsDir"`
+		ImgDir   string `toml:"imgDir"`
+	} `toml:"cms"`
+}
+
 var (
-	cacheDir = "cache"
+	config ConfigType
 )
 
-type tomlConfig struct {
-	Notion notion
-	Hugo   hugo
-	CMS    cms
-}
-
-type notion struct {
-	StartPage string
-	Token  string
-}
-
-type hugo struct {
-	Repo  string
-	Ports   []int
-	ConnMax int `toml:"connection_max"`
-	Enabled bool
-}
-
-type server struct {
-	IP string
-	DC string
-}
-
-type clients struct {
-	Data  [][]interface{}
-	Hosts []string
-}
-
-func newNotionClient() *notionapi.Client {
-	token := os.Getenv("NOTION_TOKEN")
+func newNotionClient() *notionapi.Client 
+{
+	token := config.Notion.Token
 	if token == "" {
-		fmt.Printf("must set NOTION_TOKEN env variable\n")
+		fmt.Printf("must set notion token config\n")
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -64,22 +61,30 @@ func newNotionClient() *notionapi.Client {
 	return client
 }
 
-func recreateDir(dir string) {
+func recreateDir(dir string) 
+{
 	err := os.RemoveAll(dir)
 	u.Must(err)
 	err = os.MkdirAll(dir, 0755)
 	u.Must(err)
 }
 
-func main() {
+func main() 
+{
+	if _, err := toml.DecodeFile("config.toml", &config); err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	recreateDir("static")
+	//recreateDir("static")
 
 	client := newNotionClient()
-	cache, err := caching_downloader.NewDirectoryCache(cacheDir)
+	cache, err := caching_downloader.NewDirectoryCache(config.Cms.CacheDir)
 	u.Must(err)
 	d := caching_downloader.New(cache, client)
 	_ = d //to bypass "declared and not used" error
 
 	fmt.Printf("hello world")
+
+	fmt.Printf("Title: %s\n", config.Hugo.Repo)
 }
