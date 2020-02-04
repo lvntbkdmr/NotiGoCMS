@@ -6,12 +6,12 @@ token = "b19eea49342d67604329fbcb15bb5e9d5a5f167fed05bb2359f67605f2d53d80359cbd2
 # Hugo Blog Repo Configurations
 [hugo]
 repo = "https://github.com/lvntbkdmr/blog"
-  [hugo.user]
-  email = "lvntbkdmr@gmail.com"
-  name = "Levent Bekdemir"
-    [hugo.user.git]
-    uname = "lvntbkdmr"
-    token = "64252af21598022ac7f36f0d9bf59ee68a0db5d1"
+[hugo.user]
+email = "lvntbkdmr@gmail.com"
+name = "Levent Bekdemir"
+[hugo.user.git]
+uname = "lvntbkdmr"
+token = "64252af21598022ac7f36f0d9bf59ee68a0db5d1"
 
 # CMS Configurations
 [cms]
