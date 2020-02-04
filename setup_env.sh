@@ -6,17 +6,16 @@ git config --global user.email "lvntbkdmr@gmail.com"
 git config --global user.name "Levent Bekdemir"
 git config --global github.user "lvntbkdmr"
 git config --global github.token "${GITHUB_TOKEN}"
-git submodule add https://github.com/lvntbkdmr/blog blog
 
-# redownload latest versions from notion and checkin changes
-# this in turn will trigger deploy on push from ci_netlify_deploy.sh
-rm -rf netlify*
-git checkout master
+git rm -r --cached blog
 
-./blog -redownload-notion
+git submodule add --force https://github.com/lvntbkdmr/blog blog
 
+./NotiGoCMS
+
+cd blog
 git status
-git add notion_cache/*
+git add *
 git status
 now=`date "+%Y-%m-%d %a"`
 
@@ -28,4 +27,5 @@ if [ "$?" -ne "0" ]; then
     exit 0
 fi
 set -e
-git push "https://${GITHUB_TOKEN}@github.com/kjk/blog.git" master || true
+git push || true
+cd ../

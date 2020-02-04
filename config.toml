@@ -2,10 +2,6 @@
 [notion]
 startPage = "568ac4c064c34ef6a6ad0b8d77230681"
 
-# Hugo Blog Repo Configurations
-[hugo]
-repo = "https://github.com/lvntbkdmr/blog"
-
 # CMS Configurations
 [cms]
 cacheDir = "cache"

@@ -22,9 +22,6 @@ type ConfigType struct {
 	Notion struct {
 		StartPage string `toml:"startPage"`
 	} `toml:"notion"`
-	Hugo struct {
-		Repo string `toml:"repo"`
-	} `toml:"hugo"`
 	Cms struct {
 		CacheDir string `toml:"cacheDir"`
 		PostsDir string `toml:"postsDir"`
@@ -71,6 +68,4 @@ func main() {
 	_ = d //to bypass "declared and not used" error
 
 	fmt.Printf("hello world")
-
-	fmt.Printf("Title: %s\n", config.Hugo.Repo)
 }
