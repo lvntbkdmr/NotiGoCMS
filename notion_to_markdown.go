@@ -4,6 +4,7 @@ import (
 	"html"
 	"strconv"
 	"strings"
+	"path/filepath"
 
 	"github.com/kjk/notionapi"
 	"github.com/kjk/notionapi/tomarkdown"
@@ -129,16 +130,13 @@ func (c *Converter) renderGallery(block *notionapi.Block) bool {
 func (c *Converter) RenderImage(block *notionapi.Block) bool {
 	link := block.Source
 	im := findImageMapping(c.article.Images, link)
+	imName := filepath.Base(im.relativeURL)
 	relURL := im.relativeURL
 	imgURL := c.article.getImageBlockURL(block)
 	if imgURL != "" {
-		c.r.Printf(`<a href="%s" target="_blank">`, imgURL)
-		{
-			c.r.Printf(`<img class="blog-img" src="%s">`, relURL)
-		}
-		c.r.Printf(`</a>`)
+		c.r.Printf(`![%s](%s)`, imName, relURL)
 	} else {
-		c.r.Printf(`<img class="blog-img" src="%s">`, relURL)
+		c.r.Printf(`![%s](%s)`, imName, relURL)
 	}
 	return true
 }
@@ -146,22 +144,14 @@ func (c *Converter) RenderImage(block *notionapi.Block) bool {
 // RenderPage renders BlockPage
 func (c *Converter) RenderPage(block *notionapi.Block) bool {
 	if c.r.Page.IsRoot(block) {
-		c.r.Printf(`<div class="notion-page" id="%s">`, block.ID)
 		c.r.RenderChildren(block)
-		c.r.Printf(`</div>`)
 		return true
 	}
 
-	cls := "page-link"
-	if block.IsSubPage() {
-		cls = "page"
-	}
-
-	c.r.Printf(`<div class="%s">`, cls)
 	url, title := c.getURLAndTitleForBlock(block)
 	title = html.EscapeString(title)
-	c.r.Printf(`<a href="%s">%s</a>`, url, title)
-	c.r.Printf(`</div>`)
+	c.r.Printf(`[%s](%s)`, url, title)
+	
 	return true
 }
 
@@ -215,20 +205,8 @@ func NewMarkdownConverter(c *notionapi.Client, article *Article) *Converter {
 
 // Gen returns generated Markdown
 func (c *Converter) GenereateMarkdown() []byte {
-	inner, err := c.r.ToMarkdown()
-	must(err)
-	page := c.page.Root()
-	f := page.FormatPage()
-	isMono := f != nil && f.PageFont == "mono"
-
-	s := `<p></p>`
-	if isMono {
-		s += `<div style="font-family: monospace">`
-	}
-	s += string(inner)
-	if isMono {
-		s += `</div>`
-	}
+	inner := c.r.ToMarkdown()
+	s := string(inner)
 	return []byte(s)
 }
 

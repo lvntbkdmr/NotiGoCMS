@@ -4,13 +4,9 @@ import (
 	"flag"
 	_ "net/url"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"runtime"
 
 	"github.com/kjk/notionapi"
 	"github.com/kjk/notionapi/caching_downloader"
-	"github.com/kjk/u"
 
 	"github.com/BurntSushi/toml"
 )
@@ -38,10 +34,10 @@ const (
 )
 
 func rebuildAll(d *caching_downloader.Downloader, config *ConfigType) *Articles {
-	//loadTemplates()
+	loadTemplates()
 	articles := loadArticles(d, config)
 	//readRedirects(articles)
-	//netlifyBuild(articles)
+	hugoBuild(articles, config)
 	return articles
 }
 
@@ -78,28 +74,14 @@ func newNotionClient() *notionapi.Client {
 	return client
 }
 
-func cmdAddNetlifyToken(cmd *exec.Cmd) {
-	token := os.Getenv("NETLIFY_TOKEN")
-	if token == "" {
-		logf("No NETLIFY_TOKEN\n")
-		return
-	}
-	logf("Has NETLIFY_TOKEN\n")
-	cmd.Args = append(cmd.Args, "--auth", token)
-}
-
 func main() {
 		var (
-		flgDeployDraft     bool
-		flgDeployProd      bool
 		flgNoCache         bool
 	)
 
 	{
 		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
 		flag.BoolVar(&flgNoCache, "no-cache", false, "if true, disables cache for downloading notion pages")
-		flag.BoolVar(&flgDeployDraft, "deploy-draft", false, "deploy to netlify as draft")
-		flag.BoolVar(&flgDeployProd, "deploy-prod", false, "deploy to netlify production")
 		flag.Parse()
 	}
 
@@ -111,15 +93,6 @@ func main() {
 	openLog()
 	defer closeLog()
 
-	netlifyExe := filepath.Join("./node_modules", ".bin", "netlify")
-
-	if flgDeployDraft || flgDeployProd {
-		if !u.FileExists(netlifyExe) {
-			cmd := exec.Command("yarn", "install")
-			u.RunCmdMust(cmd)
-		}
-	}
-
 	client := newNotionClient()
 	cache, err := caching_downloader.NewDirectoryCache(config.Cms.CacheDir)
 	must(err)
@@ -127,35 +100,6 @@ func main() {
 	d.EventObserver = eventObserver
 	d.RedownloadNewerVersions = true
 	d.NoReadCache = flgNoCache
-
-	doOpen := runtime.GOOS == "darwin"
-	//os.Setenv("PATH", )
-
-	if flgDeployDraft {
-		rebuildAll(d, &config)
-		cmd := exec.Command(netlifyExe, "deploy", "--dir=netlify_static", "--site=a1bb4018-531d-4de8-934d-8d5602bacbfb")
-		cmdAddNetlifyToken(cmd)
-		if doOpen {
-			cmd.Args = append(cmd.Args, "--open")
-		}
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		u.RunCmdMust(cmd)
-		return
-	}
-
-	if flgDeployProd {
-		rebuildAll(d, &config)
-		cmd := exec.Command(netlifyExe, "deploy", "--prod", "--dir=netlify_static", "--site=a1bb4018-531d-4de8-934d-8d5602bacbfb")
-		cmdAddNetlifyToken(cmd)
-		if doOpen {
-			cmd.Args = append(cmd.Args, "--open")
-		}
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		u.RunCmdMust(cmd)
-		return
-	}
 
 	articles := rebuildAll(d, &config)
 

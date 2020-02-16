@@ -158,7 +158,7 @@ func loadArticles(d *caching_downloader.Downloader, config *ConfigType) *Article
 	}
 
 	for _, article := range res.articles {
-		html, images := notionToHTML(c, article, res)
+		html, images := notionToMarkdown(c, article, res)
 		article.BodyHTML = string(html)
 		article.HTMLBody = template.HTML(article.BodyHTML)
 		article.Images = append(article.Images, images...)

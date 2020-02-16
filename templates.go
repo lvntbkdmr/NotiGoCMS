@@ -13,7 +13,7 @@ var (
 )
 
 func loadTemplates() {
-	pattern := filepath.Join("www", "tmpl", "*.tmpl.html")
+	pattern := filepath.Join("templates", "*.tmpl.md")
 	var err error
 	templates, err = template.ParseGlob(pattern)
 	must(err)
