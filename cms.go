@@ -29,27 +29,21 @@ type ConfigType struct {
 
 var (
 	config ConfigType
+	flgVerbose bool
+	nDownloadedPage = 0
 )
 
 const (
 	analyticsCode = "UA-194516-1"
 )
 
-var (
-	flgVerbose bool
-)
-
-func rebuildAll(d *caching_downloader.Downloader) *Articles {
+func rebuildAll(d *caching_downloader.Downloader, config *ConfigType) *Articles {
 	//loadTemplates()
-	articles := loadArticles(d)
+	articles := loadArticles(d, config)
 	//readRedirects(articles)
 	//netlifyBuild(articles)
 	return articles
 }
-
-var (
-	nDownloadedPage = 0
-)
 
 func eventObserver(ev interface{}) {
 	switch v := ev.(type) {
@@ -138,7 +132,7 @@ func main() {
 	//os.Setenv("PATH", )
 
 	if flgDeployDraft {
-		rebuildAll(d)
+		rebuildAll(d, &config)
 		cmd := exec.Command(netlifyExe, "deploy", "--dir=netlify_static", "--site=a1bb4018-531d-4de8-934d-8d5602bacbfb")
 		cmdAddNetlifyToken(cmd)
 		if doOpen {
@@ -151,7 +145,7 @@ func main() {
 	}
 
 	if flgDeployProd {
-		rebuildAll(d)
+		rebuildAll(d, &config)
 		cmd := exec.Command(netlifyExe, "deploy", "--prod", "--dir=netlify_static", "--site=a1bb4018-531d-4de8-934d-8d5602bacbfb")
 		cmdAddNetlifyToken(cmd)
 		if doOpen {
@@ -163,7 +157,7 @@ func main() {
 		return
 	}
 
-	articles := rebuildAll(d)
+	articles := rebuildAll(d, &config)
 
 	_ = articles
 }

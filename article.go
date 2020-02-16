@@ -546,15 +546,6 @@ func notionPageToArticle(c *notionapi.Client, page *notionapi.Page) *Article {
 		notionClient: c,
 	}
 
-	// allow debugging for specific pages
-	if false && id == "623523b67e1548a0b525749d6921465c" {
-		doTempLog = true
-		defer func() {
-			doTempLog = false
-		}()
-		logTemp("Temp logging article %s %s\n", id, title)
-	}
-
 	a.PublishedOn = root.CreatedOn()
 	a.UpdatedOn = root.LastEditedOn()
 
@@ -588,8 +579,8 @@ func notionPageToArticle(c *notionapi.Client, page *notionapi.Page) *Article {
 			relativeURL: relURL,
 		}
 		a.Images = append(a.Images, im)
-		uri := netlifyRequestGetFullHost() + relURL
-		a.HeaderImageURL = uri
+		//uri := netlifyRequestGetFullHost() + relURL
+		a.HeaderImageURL = relURL
 	}
 
 	a.removeEmptyTextBlocksAtEnd(page.Root())

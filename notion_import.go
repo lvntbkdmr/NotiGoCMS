@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/url"
 	"crypto/sha1"
 	"fmt"
 	"io/ioutil"
@@ -11,10 +12,6 @@ import (
 
 	"github.com/kjk/notionapi"
 	"github.com/kjk/notionapi/caching_downloader"
-)
-
-var (
-	cacheDir = "notion_cache"
 )
 
 func sha1OfLink(link string) string {
@@ -62,8 +59,16 @@ func guessExt(fileName string, contentType string) string {
 func downloadImage(c *notionapi.Client, uri string) ([]byte, string, error) {
 	img, err := c.DownloadFile(uri)
 	if err != nil {
-		logf("\n  failed with %s\n", err)
-		return nil, "", err
+		//A special case when image is uploded by used, and it stored in amazonaws
+		//In that case, notion.so/image should be appended and QueryEscaped
+		if (strings.Contains(err.Error(), "403 Forbidden")) {
+			uri = url.QueryEscape(uri)
+			uri = "https://www.notion.so/image/" + uri
+			img, err = c.DownloadFile(uri)
+		} else {
+			logf("\n  failed with %s\n", err)
+			return nil, "", err
+		}		
 	}
 	ext := guessExt(uri, img.Header.Get("Content-Type"))
 	return img.Data, ext, nil
@@ -75,7 +80,7 @@ func downloadAndCacheImage(c *notionapi.Client, uri string) (string, error) {
 
 	//ext := strings.ToLower(filepath.Ext(uri))
 
-	imgDir := filepath.Join(cacheDir, "img")
+	imgDir := filepath.Join(config.Cms.CacheDir, "img")
 	err := os.MkdirAll(imgDir, 0755)
 	must(err)
 

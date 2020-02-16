@@ -133,9 +133,9 @@ func buildArticlesNavigation(articles *Articles) {
 	}
 }
 
-func loadArticles(d *caching_downloader.Downloader) *Articles {
+func loadArticles(d *caching_downloader.Downloader, config *ConfigType) *Articles {
 	res := &Articles{}
-	_, err := d.DownloadPagesRecursively(notionWebsiteStartPage, nil)
+	_, err := d.DownloadPagesRecursively(config.Notion.StartPage, nil)
 	must(err)
 	res.idToPage = d.IdToPage
 

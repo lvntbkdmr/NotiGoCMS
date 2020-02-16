@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/kjk/notionapi"
-	"github.com/kjk/notionapi/tohtml"
+	"github.com/kjk/notionapi/tomarkdown"
 )
 
 // Converter renders article as html
@@ -17,7 +17,7 @@ type Converter struct {
 	idToArticle  func(string) *Article
 	galleries    [][]string
 
-	r *tohtml.Converter
+	r *tomarkdown.Converter
 }
 
 func (c *Converter) maybeGetID(block *notionapi.Block) string {
@@ -196,15 +196,15 @@ func (c *Converter) blockRenderOverride(block *notionapi.Block) bool {
 	return false
 }
 
-// NewHTMLConverter returns new HTMLGenerator
-func NewHTMLConverter(c *notionapi.Client, article *Article) *Converter {
+// NewMarkdownConverter returns new HTMLGenerator
+func NewMarkdownConverter(c *notionapi.Client, article *Article) *Converter {
 	res := &Converter{
 		notionClient: c,
 		article:      article,
 		page:         article.page,
 	}
 
-	r := tohtml.NewConverter(article.page)
+	r := tomarkdown.NewConverter(article.page)
 	notionapi.PanicOnFailures = true
 	r.RenderBlockOverride = res.blockRenderOverride
 	r.RewriteURL = res.rewriteURL
@@ -213,9 +213,9 @@ func NewHTMLConverter(c *notionapi.Client, article *Article) *Converter {
 	return res
 }
 
-// Gen returns generated HTML
-func (c *Converter) GenereateHTML() []byte {
-	inner, err := c.r.ToHTML()
+// Gen returns generated Markdown
+func (c *Converter) GenereateMarkdown() []byte {
+	inner, err := c.r.ToMarkdown()
 	must(err)
 	page := c.page.Root()
 	f := page.FormatPage()
@@ -232,13 +232,13 @@ func (c *Converter) GenereateHTML() []byte {
 	return []byte(s)
 }
 
-func notionToHTML(client *notionapi.Client, article *Article, articles *Articles) ([]byte, []*ImageMapping) {
-	//logf("notionToHTML: %s\n", notionapi.ToNoDashID(article.ID))
-	c := NewHTMLConverter(client, article)
+func notionToMarkdown(client *notionapi.Client, article *Article, articles *Articles) ([]byte, []*ImageMapping) {
+	//logf("notionToMarkdown: %s\n", notionapi.ToNoDashID(article.ID))
+	c := NewMarkdownConverter(client, article)
 	if articles != nil {
 		c.idToArticle = func(id string) *Article {
 			return articles.idToArticle[id]
 		}
 	}
-	return c.GenereateHTML(), c.article.Images
+	return c.GenereateMarkdown(), c.article.Images
 }
