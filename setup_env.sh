@@ -1,5 +1,5 @@
 #!/bin/bash
-set -u -e -o pipefail
+#set -u -e -o pipefail
 
 # setup git
 git config --global user.email "lvntbkdmr@gmail.com"

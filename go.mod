@@ -7,6 +7,7 @@ require (
 	github.com/alecthomas/chroma v0.7.1
 	github.com/chilts/sid v0.0.0-20190607042430-660e94789ec9
 	github.com/gomarkdown/markdown v0.0.0-20200127000047-1813ea067497
+	github.com/gosimple/slug v1.9.0
 	github.com/kjk/betterguid v0.0.0-20170621091430-c442874ba63a
 	github.com/kjk/notionapi v0.0.0-20191103062834-ec0722b2b9e8
 	github.com/kjk/u v0.0.0-20191229080709-d1ac8976d53f

@@ -10,6 +10,7 @@ import (
 
 	"github.com/kjk/notionapi"
 	"github.com/kjk/u"
+	"github.com/gosimple/slug"
 )
 
 // for Article.Status
@@ -93,7 +94,7 @@ func (a *Article) URL() string {
 	if a.urlOverride != "" {
 		return a.urlOverride
 	}
-	return "/article/" + a.ID + "/" + urlify(a.Title) + ".html"
+	return "/posts/" + slug.Make(a.Title)
 }
 
 // PathAsText returns navigation path as text

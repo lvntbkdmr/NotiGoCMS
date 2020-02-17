@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/kjk/u"
+	"github.com/gosimple/slug"
 )
 
 func netlifyRequestGetFullHost() string {
@@ -51,7 +52,7 @@ func genArticle(article *Article, w io.Writer) error {
 		id := normalizeID(article.page.ID)
 		model.NotionEditURL = "https://notion.so/" + id
 	}
-	path := fmt.Sprintf("%s/%s.md", config.Cms.PostsDir, article.ID)
+	path := fmt.Sprintf("%s/%s.md", config.Cms.PostsDir, slug.Make(article.Title))
 	logVerbose("%s => %s, %s, %s\n", article.ID, path, article.URL(), article.Title)
 	return execTemplate(path, "article.tmpl.md", model, w)
 }

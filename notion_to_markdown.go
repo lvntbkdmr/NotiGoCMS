@@ -8,6 +8,7 @@ import (
 
 	"github.com/kjk/notionapi"
 	"github.com/kjk/notionapi/tomarkdown"
+	"github.com/gosimple/slug"
 )
 
 // Converter renders article as html
@@ -49,7 +50,7 @@ func (c *Converter) getURLAndTitleForBlock(block *notionapi.Block) (string, stri
 		logf("No article for id %s %s\n", id, title)
 		pageURL := "https://notion.so/" + notionapi.ToNoDashID(c.page.ID)
 		logf("Link from page: %s\n", pageURL)
-		url := "/article/" + id + "/" + urlify(title)
+		url := "/posts/" + slug.Make(title)
 		return url, title
 	}
 
@@ -150,9 +151,9 @@ func (c *Converter) RenderPage(block *notionapi.Block) bool {
 
 	url, title := c.getURLAndTitleForBlock(block)
 	title = html.EscapeString(title)
-	c.r.Printf(`[%s](%s)`, url, title)
+	c.r.Printf("[%s](%s)\n", url, title)
 	
-	return true
+	return false
 }
 
 // RenderCode renders BlockCode
@@ -162,8 +163,8 @@ func (c *Converter) RenderCode(block *notionapi.Block) bool {
 	// <pre class="%s">
 	// %s
 	// </pre>`, levelCls, block.CodeLanguage, levelCls, code)
-	err := htmlHighlight(c.r.Buf, string(block.Code), block.CodeLanguage, "")
-	must(err)
+	//err := htmlHighlight(c.r.Buf, string(block.Code), block.CodeLanguage, "")
+	//must(err)
 	return true
 }
 
