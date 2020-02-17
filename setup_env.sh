@@ -8,6 +8,7 @@ git config --global github.user "lvntbkdmr"
 git config --global github.token "${GITHUB_TOKEN}"
 
 git rm -r --cached blog
+rm -rf blog
 
 git submodule add --force https://github.com/lvntbkdmr/blog blog
 
