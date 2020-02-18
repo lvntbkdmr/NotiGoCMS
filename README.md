@@ -11,7 +11,7 @@
   <h3 align="center">NotiGoCMS</h3>
 
   <p align="center">
-    A Read Me template for your projects!
+    A Notion.so Based Hugo Blog Content Management System !
     <br />
     <a href="https://www.lvnt.be/">View Demo</a>
     ·
