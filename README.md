@@ -78,12 +78,13 @@ git clone https://github.com/lvntbkdmr/NotiGoCMS.git
 2. Edit config.toml file accordingly
 ```toml
 [notion]
-startPage = It will be get from your notion page link. For example my articles list page => https://www.notion.so/lvntbkdmr/Articles-1087c264ef6b450ca5c7d3c034b399d7 so my startPage should be equal to 1087c264ef6b450ca5c7d3c034b399d7.
+startPage = "1087c264ef6b450ca5c7d3c034b399d7"
+#It will be get from your notion page link. For example my articles list page => https://www.notion.so/lvntbkdmr/Articles-1087c264ef6b450ca5c7d3c034b399d7 so my startPage should be equal to 1087c264ef6b450ca5c7d3c034b399d7.
 
 [cms]
-cacheDir = "cache"  => This is the cache folder to keep your content cached inside the repo
-postsDir = "blog/content/posts" => Your Hugo blog will be added as a sub-module in this repo, this is the relative path for your posts directory in your blog
-imgDir = "blog/static/img" => This is the relative path to store your static images fetched from Notion servers
+cacheDir = "cache" # This is the cache folder to keep your content cached inside the repo
+postsDir = "blog/content/posts" # Your Hugo blog will be added as a sub-module in this repo, this is the relative path for your posts directory in your blog
+imgDir = "blog/static/img" # This is the relative path to store your static images fetched from Notion servers
 ```
 3. Edit setup_env.sh
 ```sh
