@@ -7,7 +7,7 @@ git config --global user.name "Levent Bekdemir"
 git config --global github.user "lvntbkdmr"
 git config --global github.token "${GITHUB_TOKEN}"
 
-git rm -r --cached blog
+#git rm -r --cached blog
 rm -rf blog
 
 git submodule add --force git@github.com:lvntbkdmr/blog.git blog
