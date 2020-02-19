@@ -28,6 +28,6 @@ jobs:
 
       - name: Update from notion
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN_OVERRIDE: ${{ secrets.GITHUB_TOKEN_OVERRIDE }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: ./setup_env.sh
