@@ -28,5 +28,5 @@ if [ "$?" -ne "0" ]; then
     exit 0
 fi
 set -e
-git push || true
+git push "https://${GITHUB_TOKEN}@github.com/lvntbkdmr/blog.git" master || true
 cd ../
