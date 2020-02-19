@@ -10,7 +10,7 @@ git config --global github.token "${GITHUB_TOKEN}"
 git rm -r --cached blog
 rm -rf blog
 
-git submodule add --force https://github.com/lvntbkdmr/blog blog
+git submodule add --force git@github.com:lvntbkdmr/blog.git blog
 
 ./NotiGoCMS
 
