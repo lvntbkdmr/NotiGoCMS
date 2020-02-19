@@ -2,7 +2,7 @@ name: CRON Update Job
 
 on:
   schedule:
-    - cron: "0 */1 * * *"
+    - cron: "*/30 * * * *"
 
 jobs:
   build:
