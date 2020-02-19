@@ -1,10 +1,12 @@
 #!/bin/bash
-set -u -e -o pipefail
+#set -u -e -o pipefail
+
+GITHUB_ACTOR="lvntbkdmr"
 
 # setup git
 git config --global user.email "lvntbkdmr@gmail.com"
 git config --global user.name "Levent Bekdemir"
-git config --global github.user "lvntbkdmr"
+git config --global github.user "${GITHUB_ACTOR}"
 git config --global github.token "${GITHUB_TOKEN}"
 
 [ -d "blog" ] && git rm -r --cached blog
@@ -28,5 +30,5 @@ if [ "$?" -ne "0" ]; then
     exit 0
 fi
 set -e
-git push "https://${GITHUB_TOKEN}@github.com/lvntbkdmr/blog.git" master || true
+git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/lvntbkdmr/blog.git" master || true
 cd ../
