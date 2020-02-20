@@ -98,6 +98,7 @@ but it does not have write access permission for forked repos as this project fo
 module and pushes back the changes. In that case, you have to define a new env. variable 
 in GitHub other than GITHUB_ACTION (thats why I named as GITHUB_TOKEN_OVERRIDE) in order to 
 use GitHub action jobs for "automatic" updates for your blog as I did in here.
+Ref. = https://github.com/ad-m/github-push-action/issues/40
 ```
 5. Set your environment's **NOTION_TOKEN** => 
 ```
