@@ -3,11 +3,18 @@ package main
 import (
 	"html"
 	"path/filepath"
+	"strings"
 
 	"github.com/kjk/notionapi"
 	"github.com/kjk/notionapi/tomarkdown"
 	"github.com/gosimple/slug"
 )
+
+//Chroma highlighting option map for Notion codeblock type
+var codeLanguageMap = map[string]string {
+	"Shell": "shell",
+	"Python": "python",
+}
 
 // Converter renders article as html
 type Converter struct {
@@ -70,6 +77,26 @@ func (c *Converter) RenderImage(block *notionapi.Block) bool {
 	return true
 }
 
+// RenderBlockCode renders BlockCode
+func (c *Converter) RenderBlockCode(block *notionapi.Block) bool {
+
+	code := block.Code
+	language := block.CodeLanguage
+	start := "{{< highlight " + codeLanguageMap[language] + " >}}"
+	end := "{{< / highlight >}}"
+
+	c.r.Printf(start + "\n")
+
+	parts := strings.Split(code, "\n")
+	for _, part := range parts {
+		c.r.Printf(part + "\n")
+	}
+
+	c.r.Printf(end + "\n")
+
+	return true
+}
+
 // RenderPage renders BlockPage
 func (c *Converter) RenderPage(block *notionapi.Block) bool {
 	if c.r.Page.IsRoot(block) {
@@ -94,6 +121,8 @@ func (c *Converter) blockRenderOverride(block *notionapi.Block) bool {
 		return c.RenderPage(block)
 	case notionapi.BlockImage:
 		return c.RenderImage(block)
+	case notionapi.BlockCode:
+		return c.RenderBlockCode(block)
 	}
 	return false
 }
