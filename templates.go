@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"html/template"
+	"text/template"
 	"io"
 	"io/ioutil"
 	"path/filepath"
