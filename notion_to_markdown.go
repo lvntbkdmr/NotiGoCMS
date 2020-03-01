@@ -7,6 +7,7 @@ import (
 
 	"github.com/kjk/notionapi"
 	"github.com/kjk/notionapi/tomarkdown"
+	"github.com/kjk/notionapi/tohtml"
 	"github.com/gosimple/slug"
 )
 
@@ -25,6 +26,7 @@ type Converter struct {
 	galleries    [][]string
 
 	r *tomarkdown.Converter
+	h *tohtml.Converter
 }
 
 func (c *Converter) maybeGetID(block *notionapi.Block) string {
