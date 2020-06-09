@@ -13,6 +13,8 @@ import (
 
 //Chroma highlighting option map for Notion codeblock type
 var codeLanguageMap = map[string]string {
+	"C++": "cpp",
+	"Bash": "bash",
 	"Shell": "shell",
 	"Python": "python",
 }
