@@ -17,9 +17,11 @@ jobs:
   
       - name: Check out source code
         uses: actions/checkout@v1
-
-      - name: Update Go Dependencies
-        run: go get -u all
+        
+      - name: build the program
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: go build -o NotiGoCMS
 
       - name: Make dependency update script executable
         run: chmod +x ./update_notigocms.sh
@@ -29,11 +31,6 @@ jobs:
           GITHUB_TOKEN_OVERRIDE: ${{ secrets.GH_TOKEN_OVERRIDE }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: ./update_notigocms.sh
-        
-      - name: build the program
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-        run: go build -o NotiGoCMS
      
       - name: Make script executable
         run: chmod +x ./setup_env.sh
