@@ -28,7 +28,7 @@ jobs:
 
       - name: Update Dependencies
         env:
-          GITHUB_TOKEN_OVERRIDE: ${{ secrets.GH_TOKEN_OVERRIDE }}
+          GH_TOKEN_OVERRIDE: ${{ secrets.GH_TOKEN_OVERRIDE }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: ./update_notigocms.sh
      
@@ -37,6 +37,6 @@ jobs:
 
       - name: Update from notion
         env:
-          GITHUB_TOKEN_OVERRIDE: ${{ secrets.GH_TOKEN_OVERRIDE }}
+          GH_TOKEN_OVERRIDE: ${{ secrets.GH_TOKEN_OVERRIDE }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: ./setup_env.sh
