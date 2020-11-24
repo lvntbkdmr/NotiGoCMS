@@ -6,6 +6,7 @@
 *.so
 *.dylib
 log.txt
+update_notigocms.sh
 
 .DS_Store
 
