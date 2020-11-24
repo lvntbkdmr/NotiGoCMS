@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/url"
 	"crypto/sha1"
 	"fmt"
 	"io/ioutil"
@@ -56,26 +55,18 @@ func guessExt(fileName string, contentType string) string {
 	panic(fmt.Errorf("didn't find ext for file '%s', content type '%s'", fileName, contentType))
 }
 
-func downloadImage(c *notionapi.Client, uri string) ([]byte, string, error) {
-	img, err := c.DownloadFile(uri)
+func downloadImage(c *notionapi.Client, uri string, blockID string) ([]byte, string, error) {
+	img, err := c.DownloadFile(uri, blockID)
 	if err != nil {
-		//A special case when image is uploded by used, and it stored in amazonaws
-		//In that case, notion.so/image should be appended and QueryEscaped
-		if (strings.Contains(err.Error(), "403 Forbidden")) {
-			uri = url.QueryEscape(uri)
-			uri = "https://www.notion.so/image/" + uri
-			img, err = c.DownloadFile(uri)
-		} else {
-			logf("\n  failed with %s\n", err)
-			return nil, "", err
-		}		
+		logf("\n  failed with %s\n", err)
+		return nil, "", err
 	}
 	ext := guessExt(uri, img.Header.Get("Content-Type"))
 	return img.Data, ext, nil
 }
 
 // return path of cached image on disk
-func downloadAndCacheImage(c *notionapi.Client, uri string) (string, error) {
+func downloadAndCacheImage(c *notionapi.Client, uri string, blockID string) (string, error) {
 	sha := sha1OfLink(uri)
 
 	//ext := strings.ToLower(filepath.Ext(uri))
@@ -93,7 +84,7 @@ func downloadAndCacheImage(c *notionapi.Client, uri string) (string, error) {
 	timeStart := time.Now()
 	logf("Downloading %s ... ", uri)
 
-	imgData, ext, err := downloadImage(c, uri)
+	imgData, ext, err := downloadImage(c, uri, blockID)
 	must(err)
 
 	cachedPath = filepath.Join(imgDir, sha+ext)
@@ -114,6 +105,7 @@ func rmFile(path string) {
 		logf("os.Remove(%s) failed with %s\n", path, err)
 	}
 }
+
 func rmCached(pageID string) {
 	id := normalizeID(pageID)
 	rmFile(filepath.Join(cacheDir, id+".txt"))
