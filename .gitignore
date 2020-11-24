@@ -6,7 +6,6 @@
 *.so
 *.dylib
 log.txt
-*.sh
 
 .DS_Store
 

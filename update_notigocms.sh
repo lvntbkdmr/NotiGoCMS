@@ -9,7 +9,8 @@ git config --global user.name "Levent Bekdemir"
 git config --global github.user "${GITHUB_ACTOR}"
 git config --global github.token "${GH_TOKEN_OVERRIDE}"
 
-git add *
+git add -u
+git reset update_notigocms.sh
 now=`date "+%Y-%m-%d %a"`
 
 # "git commit" returns 1 if there's nothing to commit, so don't report this as failed build
