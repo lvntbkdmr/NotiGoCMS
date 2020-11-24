@@ -91,12 +91,12 @@ imgDir = "blog/static/img" # This is the relative path to store your static imag
 1. Edit git configurations
 2. Replace https://github.com/lvntbkdmr/blog with your Hugo blog repo link
 ```
-4. Set your environment's **GITHUB_TOKEN_OVERRIDE** => Generated from GitHub -> Your Profile -> Developer Settings -> Personal Access Tokens
+4. Set your environment's **GH_TOKEN_OVERRIDE** => Generated from GitHub -> Your Profile -> Developer Settings -> Personal Access Tokens
 ```
 Note that on GitHub Action environment, you can also use default GITHUB_ACTION env variable, 
 but it does not have write access permission for forked repos as this project forkes blog 
 module and pushes back the changes. In that case, you have to define a new env. variable 
-in GitHub other than GITHUB_ACTION (thats why I named as GITHUB_TOKEN_OVERRIDE) in order to 
+in GitHub other than GITHUB_ACTION (thats why I named as GH_TOKEN_OVERRIDE) in order to 
 use GitHub action jobs for "automatic" updates for your blog as I did in here.
 Ref. = https://github.com/ad-m/github-push-action/issues/40
 ```
